@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BookContext from "./context/BookContext";
 import AllPageRoute from "./Routers/AllPageRoute";
 import { bookList } from "./api";
+import Navbar from "./Component/Navbar/Navbar";
+import UserRecomedationContextProvider from "./Component/Pages/UserRecomendation/UserRecomedationContextProvider";
 const removeDuplicacy = (data) => {
   data.sort();
   let finalData = [];
@@ -19,6 +21,7 @@ function App() {
   const [filteredBookData, setFilteredBookData] = useState([]);
   const [booksComments, setBooksComments] = useState([]);
   const [booksRating, setBooksRating] = useState([]);
+  const [favoriteBook, setFavoriteBook] = useState([]);
   const allGenreData = useMemo(() => {
     let genreData = [];
     booksData.forEach(({ volumeInfo: { categories } }) => {
@@ -68,24 +71,38 @@ function App() {
     booksRating.push({ bookId, rating });
     setBooksRating([...booksRating]);
   };
+  const addToFavorite = (id) => {
+    if (!favoriteBook.includes(id)) {
+      favoriteBook.push(id);
+      setFavoriteBook([...favoriteBook]);
+    }
+  };
   useEffect(() => {
     fetchData();
   }, []);
   return (
-    <BookContext.Provider
-      value={{
-        booksData: filteredBookData,
-        isBookFetched,
-        allGenreData,
-        handleApplyFilter,
-        handleUserComments,
-        handleUserRating,
-        booksRating,
-        booksComments,
-      }}
-    >
-      <AllPageRoute />
-    </BookContext.Provider>
+    <React.Fragment>
+      <Navbar />
+      <BookContext.Provider
+        value={{
+          booksData: filteredBookData,
+          isBookFetched,
+          allGenreData,
+          handleApplyFilter,
+          handleUserComments,
+          handleUserRating,
+          booksRating,
+          booksComments,
+          addToFavorite,
+          favoriteBook,
+          allBookData: booksData,
+        }}
+      >
+        <UserRecomedationContextProvider>
+          <AllPageRoute />
+        </UserRecomedationContextProvider>
+      </BookContext.Provider>
+    </React.Fragment>
   );
 }
 

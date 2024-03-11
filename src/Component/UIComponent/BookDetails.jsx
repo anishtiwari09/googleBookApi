@@ -20,8 +20,6 @@ export default function BookDetails({ item, handleClose }) {
     let ratingsCount = item?.volumeInfo?.ratingCount || 0;
     let newRating = findRating[0]?.rating;
     if (newRating) {
-      console.log(newRating);
-
       averageRating *= ratingsCount;
       ratingsCount += 1;
       averageRating += newRating;
@@ -29,7 +27,8 @@ export default function BookDetails({ item, handleClose }) {
     }
     return { newRating: newRating || 0, averageRating };
   }, [booksRating]);
-  let findCommentsByUser = useMemo(() => {
+  let userComments = useMemo(() => {
+    console.log("commented");
     return (
       booksComments.filter((book) => book?.bookId === item?.id)[0]?.comments ||
       ""
@@ -141,6 +140,7 @@ export default function BookDetails({ item, handleClose }) {
                 <AddRatingAndComment
                   item={item}
                   ratingValue={bookRatedByUser?.newRating}
+                  userComments={userComments}
                 />
               </React.Fragment>
             </Stack>

@@ -6,8 +6,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import BookDetails from "./BookDetails";
 import { Box } from "@mui/material";
+import useBook from "../hooks/useBook";
 export default function PartialBookDetails({ item }) {
   const [showBook, setShowBook] = useState(false);
+  const { favoriteBook, addToFavorite } = useBook();
   return (
     <React.Fragment>
       <Card sx={{ height: "100%" }}>
@@ -62,6 +64,30 @@ export default function PartialBookDetails({ item }) {
                 </Button>
               </Box>
             </CardActions>
+            {!favoriteBook.includes(item?.id) ? (
+              <CardActions>
+                <Box sx={{ textAlign: "center", margin: "auto" }}>
+                  <Button
+                    size="small"
+                    onClick={() => addToFavorite(item?.id)}
+                    sx={{ textAlign: "center" }}
+                  >
+                    Add to Favorite
+                  </Button>
+                </Box>
+              </CardActions>
+            ) : (
+              <a
+                style={{
+                  color: "green",
+                  margin: "auto",
+                  display: "block",
+                  width: "fit-content",
+                }}
+              >
+                Favorited Book
+              </a>
+            )}
           </React.Fragment>
         </CardContent>
         {showBook && (
